@@ -1,7 +1,7 @@
 import { Product } from "@/types";
 import { httpInventoryClient } from "../client";
 import type { CoreResponse } from "../client/types";
-import { getApiErrorMessage, handleApiError } from "@/util";
+import { getApiErrorMessage } from "@/util";
 
 interface GetProductByIdArgs {
   id: string;
@@ -15,18 +15,17 @@ const getProductById: GetProductById = async ({ id }) => {
   try {
     const { data: res } = await httpInventoryClient.get<
       CoreResponse<Product>
-    >(`/v1/products/${id}`);
-
-    console.log({ res });
+    >(`/products/${id}`);
 
     if (!res?.success) {
       const errorMessage = getApiErrorMessage(res.error);
-      throw new Error(errorMessage);
+      console.error("[getProductById]", errorMessage, res.error);
+      return null;
     }
 
     return res.data;
   } catch (error) {
-    handleApiError(error);
+    console.error("[getProductById]", error);
     return null;
   }
 };
