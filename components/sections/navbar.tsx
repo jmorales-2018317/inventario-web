@@ -131,9 +131,10 @@ const defaultMenu: NavMenuItem[] = [
   { title: "Precios", url: "/precios" },
 ];
 
+// update de los enlaces de login/signup si cambian en el futuro
 const defaultAuth: NavAuth = {
-  login: { title: "Iniciar sesión", url: "/login" },
-  signup: { title: "Crear cuenta", url: "/signup" },
+  login: { title: "Iniciar sesión", url: "/auth/login" },
+  signup: { title: "Crear cuenta", url: "/auth/signup" },
 };
 
 function SmartLink({
