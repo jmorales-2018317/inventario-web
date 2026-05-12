@@ -1,7 +1,6 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Link from "next/link";
 import { Boxes, Loader2 } from "lucide-react";
@@ -103,7 +102,20 @@ function LoginForm() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginValues>({ resolver: zodResolver(loginSchema) });
+  } = useForm<LoginValues>({
+    resolver: async (values) => {
+      const result = loginSchema.safeParse(values);
+      if (result.success) return { values: result.data, errors: {} };
+      return {
+        values: {},
+        errors: result.error.issues.reduce((acc, issue) => {
+          const path = issue.path[0] as string;
+          acc[path] = { message: issue.message, type: issue.code };
+          return acc;
+        }, {} as Record<string, { message: string; type: string }>),
+      };
+    },
+  });
 
   const onSubmit = async (values: LoginValues) => {
     // TODO: conectar con servicio de auth
@@ -161,7 +173,20 @@ function SignupForm() {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SignupValues>({ resolver: zodResolver(signupSchema) });
+  } = useForm<SignupValues>({
+    resolver: async (values) => {
+      const result = signupSchema.safeParse(values);
+      if (result.success) return { values: result.data, errors: {} };
+      return {
+        values: {},
+        errors: result.error.issues.reduce((acc, issue) => {
+          const path = issue.path[0] as string;
+          acc[path] = { message: issue.message, type: issue.code };
+          return acc;
+        }, {} as Record<string, { message: string; type: string }>),
+      };
+    },
+  });
 
   const onSubmit = async (values: SignupValues) => {
     // TODO: conectar con servicio de auth
