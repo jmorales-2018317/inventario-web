@@ -88,7 +88,7 @@ export function Hero({
 
             <div className="flex flex-col items-center gap-3 pt-3 pb-10 sm:flex-row sm:justify-center">
               {buttons?.primary && (
-                <Button size="lg" asChild>
+                <Button size="xl" asChild>
                   <Link href={buttons.primary.url}>
                     {buttons.primary.text}
                     {buttons.primary.icon ?? <ArrowRight className="size-4" />}
