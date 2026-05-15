@@ -1,9 +1,6 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
 import {
-  Boxes,
   ClipboardList,
   Layers,
   LineChart,
@@ -35,6 +32,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { LogoMark, defaultLogo, type LogoMarkLogo } from "@/components/logo-mark";
+import { SmartLink } from "@/components/smart-link";
 import { cn } from "@/lib/utils";
 
 type NavMenuItem = {
@@ -45,16 +44,6 @@ type NavMenuItem = {
   items?: NavMenuItem[];
 };
 
-type NavLogo = {
-  url: string;
-  src?: string;
-  alt: string;
-  title: string;
-  className?: string;
-  /** Render inline (works without configuring next/image domains) */
-  inline?: boolean;
-};
-
 type NavAuth = {
   login: { title: string; url: string };
   signup: { title: string; url: string };
@@ -62,20 +51,11 @@ type NavAuth = {
 
 export type NavbarProps = {
   className?: string;
-  logo?: NavLogo;
+  logo?: LogoMarkLogo;
   menu?: NavMenuItem[];
   auth?: NavAuth;
   /** Slot opcional al lado de los botones de auth (p. ej. ModeToggle) */
   trailing?: React.ReactNode;
-};
-
-const isExternal = (url: string) => /^https?:\/\//.test(url);
-
-const defaultLogo: NavLogo = {
-  url: "/",
-  alt: "Inventario",
-  title: "Inventario",
-  inline: true,
 };
 
 const defaultMenu: NavMenuItem[] = [
@@ -136,59 +116,6 @@ const defaultAuth: NavAuth = {
   login: { title: "Iniciar sesión", url: "/auth/login" },
   signup: { title: "Crear cuenta", url: "/auth/signup" },
 };
-
-function SmartLink({
-  href,
-  className,
-  children,
-  ...rest
-}: {
-  href: string;
-  className?: string;
-  children: React.ReactNode;
-} & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
-  if (isExternal(href)) {
-    return (
-      <a
-        href={href}
-        className={className}
-        target="_blank"
-        rel="noreferrer noopener"
-        {...rest}
-      >
-        {children}
-      </a>
-    );
-  }
-  return (
-    <Link href={href} className={className} {...rest}>
-      {children}
-    </Link>
-  );
-}
-
-function LogoMark({ logo }: { logo: NavLogo }) {
-  return (
-    <SmartLink href={logo.url} className="flex items-center gap-2">
-      {logo.src && !logo.inline ? (
-        <Image
-          src={logo.src}
-          alt={logo.alt}
-          width={32}
-          height={32}
-          className={cn("max-h-8 w-auto dark:invert", logo.className)}
-        />
-      ) : (
-        <span className="flex size-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
-          <Boxes className="size-4" />
-        </span>
-      )}
-      <span className="font-heading text-lg font-semibold tracking-tight">
-        {logo.title}
-      </span>
-    </SmartLink>
-  );
-}
 
 export function Navbar({
   className,
@@ -299,7 +226,7 @@ function renderMenuItem(item: NavMenuItem) {
       <NavigationMenuLink asChild>
         <SmartLink
           href={item.url}
-          className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
+          className="bg-transparent group inline-flex h-9 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:text-accent-foreground"
         >
           {item.title}
         </SmartLink>
